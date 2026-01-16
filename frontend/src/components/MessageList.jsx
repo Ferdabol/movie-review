@@ -31,11 +31,11 @@ export default function ReviewList({ reviews }) {
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                {[...Array(5)].map((_, i) => (
+                {[1, 2, 3, 4, 5].map((star) => (
                   <span
-                    key={i}
+                    key={star}
                     className={`text-lg ${
-                      i < review.rating ? 'text-orange-500' : 'text-gray-600'
+                      star <= review.rating ? 'text-orange-500' : 'text-gray-700 opacity-30'
                     }`}
                   >
                     ⭐

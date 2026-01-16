@@ -28,7 +28,7 @@ export default function ReviewForm({ onAddReview }) {
                 type="button"
                 onClick={() => setRating(star)}
                 className={`text-2xl ${
-                  star <= rating ? 'text-orange-500' : 'text-gray-600'
+                  star <= rating ? 'text-orange-500' : 'text-gray-700 opacity-30'
                 } hover:text-orange-400 transition-colors`}
               >
                 ⭐
