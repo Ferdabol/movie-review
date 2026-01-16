@@ -43,7 +43,7 @@ export default function AuthModal({ onLogin }) {
                   key={account.username}
                   type="button"
                   onClick={() => handleQuickLogin(account)}
-                  className="flex-1 bg-gray-800 hover:bg-gray-700 text-white py-2 px-3 rounded-lg transition-colors text-sm font-medium"
+                  className="flex-1 bg-gray-800 hover:bg-gray-700 text-white py-2 px-3 rounded-lg transition-colors text-sm font-medium cursor-pointer"
                 >
                   {account.username}
                 </button>
@@ -101,7 +101,7 @@ export default function AuthModal({ onLogin }) {
 
           <button
             type="submit"
-            className="w-full bg-orange-500 hover:bg-orange-600 text-black font-bold py-3 rounded-lg transition-colors"
+            className="w-full bg-orange-500 hover:bg-orange-600 text-black font-bold py-3 rounded-lg transition-colors cursor-pointer"
           >
             {isLogin ? 'Login' : 'Sign Up'}
           </button>
@@ -110,7 +110,7 @@ export default function AuthModal({ onLogin }) {
         <div className="mt-6 text-center">
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className="text-orange-500 hover:text-orange-400 text-sm"
+            className="text-orange-500 hover:text-orange-400 text-sm cursor-pointer"
           >
             {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Login'}
           </button>

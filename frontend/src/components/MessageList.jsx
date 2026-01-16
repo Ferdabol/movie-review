@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export default function ReviewList({ reviews }) {
+export default function ReviewList({ reviews, currentUser, onEditReview, onDeleteReview }) {
   const reviewsEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -11,6 +11,16 @@ export default function ReviewList({ reviews }) {
     scrollToBottom();
   }, [reviews]);
 
+  const handleEdit = (review) => {
+    onEditReview(review);
+  };
+
+  const handleDelete = (reviewId) => {
+    if (window.confirm('Are you sure you want to delete this review?')) {
+      onDeleteReview(reviewId);
+    }
+  };
+
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-4">
       {reviews.length === 0 ? (
@@ -18,35 +28,59 @@ export default function ReviewList({ reviews }) {
           No reviews yet. Be the first to review this movie!
         </div>
       ) : (
-        reviews.map((review) => (
-          <div key={review.id} className="bg-gray-900 rounded-lg p-4 border border-gray-800">
-            <div className="flex items-start justify-between mb-2">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-yellow-500 flex items-center justify-center text-black font-bold">
-                  {review.author[0].toUpperCase()}
+        reviews.map((review) => {
+          const isOwnReview = currentUser && review.userId === currentUser.username.toLowerCase();
+          
+          return (
+            <div key={review.id} className="bg-gray-900 rounded-lg p-4 border border-gray-800">
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-yellow-500 flex items-center justify-center text-black font-bold">
+                    {review.author[0].toUpperCase()}
+                  </div>
+                  <div>
+                    <div className="font-semibold text-white">{review.author}</div>
+                    <div className="text-xs text-gray-500">{review.timestamp}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="font-semibold text-white">{review.author}</div>
-                  <div className="text-xs text-gray-500">{review.timestamp}</div>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span
+                        key={star}
+                        className={`text-lg ${
+                          star <= review.rating ? 'text-orange-500' : 'text-gray-700 opacity-30'
+                        }`}
+                      >
+                        ⭐
+                      </span>
+                    ))}
+                    <span className="ml-1 text-orange-500 font-bold">{review.rating}/5</span>
+                  </div>
+                  {isOwnReview && (
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEdit(review)}
+                        className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors cursor-pointer"
+                        title="Edit review"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(review.id)}
+                        className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition-colors cursor-pointer"
+                        title="Delete review"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
-              <div className="flex items-center gap-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <span
-                    key={star}
-                    className={`text-lg ${
-                      star <= review.rating ? 'text-orange-500' : 'text-gray-700 opacity-30'
-                    }`}
-                  >
-                    ⭐
-                  </span>
-                ))}
-                <span className="ml-1 text-orange-500 font-bold">{review.rating}/5</span>
-              </div>
+              <p className="text-gray-300">{review.text}</p>
             </div>
-            <p className="text-gray-300">{review.text}</p>
-          </div>
-        ))
+          );
+        })
       )}
       <div ref={reviewsEndRef} />
     </div>

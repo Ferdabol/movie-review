@@ -33,7 +33,7 @@ export default function MovieList({ movies, activeMovie, onMovieSelect, onAddMov
           <button
             key={movie.id}
             onClick={() => onMovieSelect(movie.id)}
-            className={`w-full text-left px-4 py-3 hover:bg-gray-900 transition-colors ${
+            className={`w-full text-left px-4 py-3 hover:bg-gray-900 transition-colors cursor-pointer ${
               activeMovie === movie.id
                 ? 'bg-gray-900 border-l-4 border-orange-500'
                 : 'border-l-4 border-transparent'
@@ -84,7 +84,7 @@ export default function MovieList({ movies, activeMovie, onMovieSelect, onAddMov
             <div className="flex gap-2">
               <button
                 type="submit"
-                className="flex-1 bg-orange-500 hover:bg-orange-600 text-black px-3 py-2 rounded transition-colors font-bold"
+                className="flex-1 bg-orange-500 hover:bg-orange-600 text-black px-3 py-2 rounded transition-colors font-bold cursor-pointer"
               >
                 Add
               </button>
@@ -96,7 +96,7 @@ export default function MovieList({ movies, activeMovie, onMovieSelect, onAddMov
                   setNewMovieYear('');
                   setNewMovieGenre('');
                 }}
-                className="flex-1 bg-gray-900 hover:bg-gray-800 text-white px-3 py-2 rounded transition-colors"
+                className="flex-1 bg-gray-900 hover:bg-gray-800 text-white px-3 py-2 rounded transition-colors cursor-pointer"
               >
                 Cancel
               </button>
@@ -105,7 +105,7 @@ export default function MovieList({ movies, activeMovie, onMovieSelect, onAddMov
         ) : (
           <button
             onClick={() => setShowCreateForm(true)}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-black px-4 py-2 rounded transition-colors font-bold"
+            className="w-full bg-orange-500 hover:bg-orange-600 text-black px-4 py-2 rounded transition-colors font-bold cursor-pointer"
           >
             + Add Movie
           </button>

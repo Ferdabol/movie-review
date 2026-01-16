@@ -13,7 +13,7 @@ export default function UserProfile({ user, onLogout }) {
         </div>
         <button
           onClick={onLogout}
-          className="text-gray-400 hover:text-orange-500 transition-colors text-sm"
+          className="text-gray-400 hover:text-orange-500 transition-colors text-sm cursor-pointer"
         >
           Logout
         </button>

@@ -54,20 +54,20 @@ function App() {
   
   const [reviewsByMovie, setReviewsByMovie] = useState({
     1: [
-      { id: 1, author: 'Alice', text: 'Absolutely brilliant! One of the best movies ever made. The story is captivating and the acting is superb.', rating: 5, timestamp: '2 days ago' },
-      { id: 2, author: 'Bob', text: 'A masterpiece. Every scene is perfect and the ending is unforgettable.', rating: 5, timestamp: '1 day ago' },
-      { id: 3, author: 'Charlie', text: 'Great movie, but a bit slow in some parts. Still highly recommend it!', rating: 4, timestamp: '12 hours ago' },
+      { id: 1, author: 'Alice', userId: 'alice', text: 'Absolutely brilliant! One of the best movies ever made. The story is captivating and the acting is superb.', rating: 5, timestamp: '2 days ago' },
+      { id: 2, author: 'Bob', userId: 'bob', text: 'A masterpiece. Every scene is perfect and the ending is unforgettable.', rating: 5, timestamp: '1 day ago' },
+      { id: 3, author: 'Charlie', userId: 'charlie', text: 'Great movie, but a bit slow in some parts. Still highly recommend it!', rating: 4, timestamp: '12 hours ago' },
     ],
     2: [
-      { id: 1, author: 'David', text: 'The greatest crime movie of all time. Marlon Brando is legendary!', rating: 5, timestamp: '3 days ago' },
-      { id: 2, author: 'Eve', text: 'A timeless classic. The cinematography and storytelling are unmatched.', rating: 5, timestamp: '1 day ago' },
+      { id: 1, author: 'David', userId: 'david', text: 'The greatest crime movie of all time. Marlon Brando is legendary!', rating: 5, timestamp: '3 days ago' },
+      { id: 2, author: 'Eve', userId: 'eve', text: 'A timeless classic. The cinematography and storytelling are unmatched.', rating: 5, timestamp: '1 day ago' },
     ],
     3: [
-      { id: 1, author: 'Frank', text: 'Mind-bending and visually stunning. Christopher Nolan at his best!', rating: 5, timestamp: '2 days ago' },
-      { id: 2, author: 'Grace', text: 'Amazing concept and execution, though it requires full attention to follow.', rating: 4, timestamp: '18 hours ago' },
+      { id: 1, author: 'Frank', userId: 'frank', text: 'Mind-bending and visually stunning. Christopher Nolan at his best!', rating: 5, timestamp: '2 days ago' },
+      { id: 2, author: 'Grace', userId: 'grace', text: 'Amazing concept and execution, though it requires full attention to follow.', rating: 4, timestamp: '18 hours ago' },
     ],
     4: [
-      { id: 1, author: 'Henry', text: 'Tarantino\'s masterpiece! Nonlinear storytelling at its finest.', rating: 5, timestamp: '4 days ago' },
+      { id: 1, author: 'Henry', userId: 'henry', text: 'Tarantino\'s masterpiece! Nonlinear storytelling at its finest.', rating: 5, timestamp: '4 days ago' },
     ],
   });
 
@@ -102,14 +102,57 @@ function App() {
     if (!activeMovieId) return;
 
     const newReview = {
-      id: reviews.length + 1,
+      id: reviews.length > 0 ? Math.max(...reviews.map(r => r.id)) + 1 : 1,
       author: user?.username || 'You',
+      userId: user?.username.toLowerCase(),
       text: reviewData.text,
       rating: reviewData.rating,
       timestamp: 'Just now',
     };
 
     const updatedReviews = [...reviews, newReview];
+    setReviewsByMovie({
+      ...reviewsByMovie,
+      [activeMovieId]: updatedReviews,
+    });
+
+    // Update movie's average rating and review count
+    const avgRating = calculateAverageRating(updatedReviews);
+    setMovies(movies.map(movie => 
+      movie.id === activeMovieId 
+        ? { ...movie, averageRating: avgRating, reviewCount: updatedReviews.length }
+        : movie
+    ));
+  };
+
+  const handleEditReview = (reviewId, updatedData) => {
+    if (!activeMovieId) return;
+
+    const updatedReviews = reviews.map(review =>
+      review.id === reviewId
+        ? { ...review, text: updatedData.text, rating: updatedData.rating, timestamp: 'Edited' }
+        : review
+    );
+
+    setReviewsByMovie({
+      ...reviewsByMovie,
+      [activeMovieId]: updatedReviews,
+    });
+
+    // Update movie's average rating
+    const avgRating = calculateAverageRating(updatedReviews);
+    setMovies(movies.map(movie => 
+      movie.id === activeMovieId 
+        ? { ...movie, averageRating: avgRating }
+        : movie
+    ));
+  };
+
+  const handleDeleteReview = (reviewId) => {
+    if (!activeMovieId) return;
+
+    const updatedReviews = reviews.filter(review => review.id !== reviewId);
+
     setReviewsByMovie({
       ...reviewsByMovie,
       [activeMovieId]: updatedReviews,
@@ -154,6 +197,9 @@ function App() {
         movie={activeMovie}
         reviews={reviews}
         onAddReview={handleAddReview}
+        onEditReview={handleEditReview}
+        onDeleteReview={handleDeleteReview}
+        currentUser={user}
       />
     </div>
   );
